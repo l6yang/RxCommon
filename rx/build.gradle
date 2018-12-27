@@ -1,0 +1,91 @@
+import java.text.SimpleDateFormat
+
+def format = new SimpleDateFormat("yyyyMMdd", Locale.SIMPLIFIED_CHINESE)
+def date = format.format(new Date())
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    api 'io.reactivex.rxjava2:rxjava:2.2.4'
+    api 'com.squareup.retrofit2:converter-gson:2.5.0'
+    api 'com.squareup.retrofit2:retrofit:2.5.0'
+    api 'com.squareup.retrofit2:converter-scalars:2.5.0'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    api 'com.squareup.okhttp3:logging-interceptor:3.12.1'
+    api 'com.github.tbruyelle:rxpermissions:0.10.2'
+}
+ext {
+    library = [version: '0.0.1']
+}
+//aar打包
+//以下方法为生成jar包文件命令
+//gradlew buildJar
+task deleteOldJar(type: Delete) {
+    //delete 'build/'
+    //delete 'release/'
+    //delete 'build/outputs/libs/rx.jar'
+    //delete "rx_${library.version}_${date}.jar"
+    //delete "release/rx_${library.version}_${date}.jar"
+    //delete "release/rx_${library.version}_${date}.aar"
+}
+task buildJar(type: Copy) {
+    //生成Jar包
+    from('build/intermediates/packaged-classes/release/')
+    into('build/outputs/libs/')
+    include('classes.jar')
+    rename('classes.jar', "rx_${library.version}_${date}.jar")
+    //拷贝生成的Jar包到外部文件夹
+    from('build/outputs/libs/')
+    into('release/')
+    include("rx_${library.version}_${date}.jar")
+    //拷贝生成的aar包到外部文件夹
+    from('build/outputs/aar/')
+    into('release/')
+    include('rx-release.aar')
+    rename('rx-release.aar', "rx_${library.version}_${date}.aar")
+}
+
+buildJar.dependsOn(deleteOldJar, build)
+
+//发布项目
+publish {
+    userOrg = 'l6yang'          //bintray注册的用户名
+    groupId = 'com.loyal'       //compile引用时的第1部分groupId
+    artifactId = 'rx'   //compile引用时的第2部分项目名
+    publishVersion = "${library.version}"    //compile引用时的第3部分版本号
+    desc = 'rxjava/rxandroid command'//描述（可不写）
+    repoName = "android"//创建的maven仓库名称
+    website = 'https://github.com/l6yang/BaseCommon'//github项目地址（可不写）
+    //gradlew clean build bintrayUpload -PbintrayUser=BINTRAY_USERNAME
+    //-PbintrayKey=BINTRAY_KEY
+    //-PdryRun=false
+    //其中BINTRAY_USERNAME换成bintray注册的用户名（userOrg）
+    //BINTRAY_KEY换成自己的APIKEY
+}
