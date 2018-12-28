@@ -13,6 +13,9 @@ public interface ServerBaseUrlImpl<T> {
      */
     String baseUrl(String clientIp);
 
+    /**
+     * @return 默认端口是9080，具体端口需要自行修改
+     */
     String defaultPort();//端口配置
 
     /**

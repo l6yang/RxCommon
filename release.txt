@@ -1,2 +1,2 @@
-loyal.rxjava
-rxjava
+loyal.rx
+rx

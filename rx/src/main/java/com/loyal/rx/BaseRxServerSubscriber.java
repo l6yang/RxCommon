@@ -19,11 +19,6 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
     }
 
     @Override
-    public String serverNameSpace() {
-        return null;
-    }
-
-    @Override
     public String defaultPort() {
         return "9080";
     }

@@ -3,10 +3,10 @@ apply plugin: "com.android.application"
 android{
     signingConfigs {
         release {
-            keyAlias 'rxjava'
-            keyPassword 'loyal.rxjava'
-            storeFile file('../rxjava.jks')
-            storePassword 'loyal.rxjava'
+            keyAlias 'loyal.rx'
+            keyPassword 'loyal.rx'
+            storeFile file('../rx.jks')
+            storePassword 'loyal.rx'
         }
     }
     compileSdkVersion 28

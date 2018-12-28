@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,7 +42,7 @@ dependencies {
     api 'com.github.tbruyelle:rxpermissions:0.10.2'
 }
 ext {
-    library = [version: '0.0.1']
+    library = [version: '0.0.2']
 }
 //aar打包
 //以下方法为生成jar包文件命令
