@@ -36,7 +36,8 @@ public class RetrofitManage {
                 //增加返回值为Gson的支持(以实体类返回)
                 .addConverterFactory(GsonConverterFactory.create())
                 //增加返回值为Oservable<T>的支持
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
     }
 
     public static RetrofitManage getInstance(String baseUrl) {
@@ -48,10 +49,6 @@ public class RetrofitManage {
             }
         } else mInstance.reSetIpAdd(baseUrl);
         return mInstance;
-    }
-
-    public static RetrofitManage getInstance() {
-        return getInstance(null);
     }
 
     public <T> T createServer(Class<T> tClass) {

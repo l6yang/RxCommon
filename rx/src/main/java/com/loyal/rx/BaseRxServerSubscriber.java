@@ -18,9 +18,10 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
         return "http";//default
     }
 
+    /*端口号范围：0～65535*/
     @Override
-    public String defaultPort() {
-        return "9080";
+    public int defaultPort() {
+        return 9080;
     }
 
     @Override
@@ -50,11 +51,10 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
     }
 
     @Override
-    public BaseRxServerSubscriber<T> setUrl(String ipAdd) {
+    public void setUrl(String ipAdd) {
         if (TextUtils.isEmpty(ipAdd))
-            createServer(RetrofitManage.getInstance());
+            createServer(RetrofitManage.getInstance(null));
         else
             createServer(RetrofitManage.getInstance(baseUrl(ipAdd)));
-        return this;
     }
 }

@@ -1,6 +1,6 @@
 package com.loyal.rx.impl;
 
-import com.loyal.rx.BaseRxServerSubscriber;
+import android.support.annotation.IntRange;
 
 public interface ServerBaseUrlImpl<T> {
     String httpOrHttps();//http 或者https
@@ -14,12 +14,14 @@ public interface ServerBaseUrlImpl<T> {
     String baseUrl(String clientIp);
 
     /**
+     * 端口号范围：0～65535
      * @return 默认端口是9080，具体端口需要自行修改
      */
-    String defaultPort();//端口配置
+    @IntRange(from = 0, to = 65535)
+    int defaultPort();//端口配置
 
     /**
      * @param url IP地址或者访问地址
      */
-    BaseRxServerSubscriber<T> setUrl(String url);
+    void setUrl(String url);
 }

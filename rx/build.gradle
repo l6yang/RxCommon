@@ -42,7 +42,7 @@ dependencies {
     api 'com.github.tbruyelle:rxpermissions:0.10.2'
 }
 ext {
-    library = [version: '0.0.2']
+    library = [version: '0.0.1']
 }
 //aar打包
 //以下方法为生成jar包文件命令

@@ -31,6 +31,7 @@ package com.loyal.rx;
  而Schedulers.trampoline( )在RxJava1中的作用是当其它排队的任务完成后，在当前线程排队开始执行接到的任务，有点像RxJava2中的Schedulers.single()，但也不完全相同，因为Schedulers.single()不是在当前线程而是在一个线程单例中排队执行任务。
  */
 
+import android.support.annotation.IntRange;
 import android.text.TextUtils;
 
 import io.reactivex.Observable;
@@ -47,14 +48,17 @@ public class RxUtil {
      * 2、192.168.1.15:9080
      */
     public static String getIpAddressByDefaultIp(String ipAdd) {
-        return getIpAddressByDefaultIp(ipAdd, "9080");
+        return getIpAddressByDefaultIp(ipAdd, 9080);
     }
 
     /**
      * 默认端口192.168.0.1
      */
-    public static String getIpAddressByDefaultIp(String ipAdd, String port) {
-        return getIpAddress(ipAdd, "192.168.0.1", port);
+    public static String getIpAddressByDefaultIp(String ipAdd, @IntRange(from = 0, to = 65535) int port) {
+        if (port < 0 || port > 65535) {
+            throw new IllegalArgumentException("端口号范围0～65535，当前端口号：" + port);
+        } else
+            return getIpAddress(ipAdd, "192.168.0.1", port);
     }
 
     /**
@@ -65,14 +69,17 @@ public class RxUtil {
      * 2、192.168.1.15:9080
      */
     public static String getIpAddressByDefaultPort(String ipAdd) {
-        return getIpAddressByDefaultPort(ipAdd,"9080");
+        return getIpAddressByDefaultPort(ipAdd, 9080);
     }
 
     /**
      * 默认端口9080
      */
-    public static String getIpAddressByDefaultPort(String ipAdd, String defaultPort) {
-        return getIpAddress(ipAdd, "192.168.0.1", defaultPort);
+    public static String getIpAddressByDefaultPort(String ipAdd, @IntRange(from = 0, to = 65535) int defaultPort) {
+        if (defaultPort < 0 || defaultPort > 65535) {
+            throw new IllegalArgumentException("端口号范围0～65535，当前端口号：" + defaultPort);
+        } else
+            return getIpAddress(ipAdd, "192.168.0.1", defaultPort);
     }
 
     /**
@@ -82,7 +89,7 @@ public class RxUtil {
      * @return 1、192.168.0.1:9081
      * 2、192.168.0.1:9080
      */
-    public static String getIpAddress(String ipAdd, String defaultIp, String defaultPort) {
+    public static String getIpAddress(String ipAdd, String defaultIp, @IntRange(from = 0, to = 65535) int defaultPort) {
         String address;
         if (TextUtils.isEmpty(ipAdd)) {
             address = defaultIp + ":" + defaultPort;
@@ -92,7 +99,7 @@ public class RxUtil {
             if (ipAdd.contains(":")) {
                 address = ipAdd;
             } else {
-                address = ipAdd + ":" + defaultPort;
+                address = String.format("%s:%s", ipAdd, defaultPort);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,17 +109,17 @@ public class RxUtil {
     }
 
     /**
-     * @see #getBaseUrl(String, String, String, String)
+     * @see #getBaseUrl(String, String, int, String)
      */
     public static String getBaseUrl(String ipAdd, String nameSpace) {
         return getBaseUrl("http", ipAdd, nameSpace);
     }
 
     /**
-     * @see #getBaseUrl(String, String, String, String)
+     * @see #getBaseUrl(String, String, int, String)
      */
     public static String getBaseUrl(String http, String ipAdd, String nameSpace) {
-        return getBaseUrl(http, ipAdd, "9080", nameSpace);
+        return getBaseUrl(http, ipAdd, 9080, nameSpace);
     }
 
     /**
@@ -122,13 +129,14 @@ public class RxUtil {
      * @param nameSpace test
      * @return http://192.168.0.155:9080/test/ 必须以"/"结尾
      */
-    public static String getBaseUrl(String http, String ipAdd, String port, String nameSpace) {
-        String url = getIpAddressByDefaultPort(ipAdd, port);
-        return String.format("%s://%s/%s/", http, url, nameSpace);
+    public static String getBaseUrl(String http, String ipAdd, @IntRange(from = 0, to = 65535) int port, String nameSpace) {
+        if (port < 0 || port > 65535) {
+            throw new IllegalArgumentException("端口号范围0～65535，当前端口号：" + port);
+        } else {
+            String url = getIpAddressByDefaultPort(ipAdd, port);
+            return String.format("%s://%s/%s/", http, url, nameSpace);
+        }
     }
-
-
-
 
 
     /**
