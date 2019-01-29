@@ -1,6 +1,5 @@
 package com.sample.rx.libs.rxjava;
 
-
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.http.Field;
@@ -25,4 +24,10 @@ public interface ObservableServer {
     @Streaming
     @GET
     Observable<ResponseBody> downloadImage(@Url String url);
+
+    //根据获取到的代码名称获取数据
+    @FormUrlEncoded
+    @POST("pda.do?method=" + "getTransDataInfo")
+    Observable<String> getTransDataInfo(@Field("sblx") String sblx);
+
 }

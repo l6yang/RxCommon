@@ -15,13 +15,21 @@ public interface ServerBaseUrlImpl<T> {
 
     /**
      * 端口号范围：0～65535
+     *
      * @return 默认端口是9080，具体端口需要自行修改
      */
     @IntRange(from = 0, to = 65535)
     int defaultPort();//端口配置
 
     /**
-     * @param url IP地址或者访问地址
+     * @param url           IP地址或者访问地址
+     * @param unTrustedCert 使用https访问，且证书不受信任
+     *                      {@link #httpOrHttps()}
      */
-    void setUrl(String url);
+    void setUrl(String url, boolean unTrustedCert);
+
+    /**
+     * 使用https访问,且证书不受信任
+     */
+    boolean unTrustedCert();
 }

@@ -25,6 +25,11 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
     }
 
     @Override
+    public boolean unTrustedCert() {
+        return false;
+    }
+
+    @Override
     public String baseUrl(String clientIp) {
         return RxUtil.getBaseUrl(httpOrHttps(), clientIp, defaultPort(), serverNameSpace());
     }
@@ -47,14 +52,15 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
 
     public BaseRxServerSubscriber(Context context, String ipAdd, int what, boolean showProgressDialog, RxSubscriberListener<T> listener) {
         super(context, what, showProgressDialog, listener);
-        setUrl(ipAdd);
+        setUrl(ipAdd, TextUtils.equals("https", httpOrHttps()) && unTrustedCert());
     }
 
     @Override
-    public void setUrl(String ipAdd) {
+    public void setUrl(String ipAdd, boolean unTrustedCert) {
         if (TextUtils.isEmpty(ipAdd))
             createServer(RetrofitManage.getInstance(null));
-        else
-            createServer(RetrofitManage.getInstance(baseUrl(ipAdd)));
+        else {
+            createServer(RetrofitManage.getInstance(baseUrl(ipAdd), unTrustedCert));
+        }
     }
 }

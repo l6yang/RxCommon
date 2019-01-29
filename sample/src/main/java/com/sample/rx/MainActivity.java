@@ -35,11 +35,11 @@ public class MainActivity extends AppCompatActivity implements RxSubscriberListe
 
     @Override
     public void onResult(int what, Object tag, String result) {
-
+        System.out.println("onResult:"+result);
     }
 
     @Override
     public void onError(int what, Object tag, Throwable e) {
-
+        System.out.println("onError:"+e.getMessage());
     }
 }

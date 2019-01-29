@@ -22,9 +22,14 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
     }
 
     @Override
-    public int defaultPort() {
-        return 8080;
+    public String httpOrHttps() {
+        return "http";
     }
+
+    /*@Override
+    public boolean unTrustedCert() {
+        return true;
+    }*/
 
     @Override
     public void createServer(RetrofitManage retrofitManage) {
@@ -49,5 +54,11 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
     @Override
     public Observable<ResponseBody> downloadImage(String url) {
         return server.downloadImage(url);
+    }
+
+    @Override
+    public Observable<String> getTransDataInfo(String sblx) {
+        //serverNameSpace()="ydjw";
+        return server.getTransDataInfo(sblx);
     }
 }
