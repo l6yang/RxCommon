@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.loyal.rx.BaseRxServerSubscriber;
 import com.loyal.rx.RetrofitManage;
+import com.sample.rx.State;
 
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
@@ -23,13 +24,15 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
 
     @Override
     public String httpOrHttps() {
-        return "http";
+        return State.httpOrHttps;
     }
 
-    /*@Override
-    public boolean unTrustedCert() {
-        return true;
-    }*/
+    @Override
+    public boolean trustedCert() {
+        boolean t = State.trustedCert;
+        System.out.println("trustedCert()--" + t);
+        return t;
+    }
 
     @Override
     public void createServer(RetrofitManage retrofitManage) {
@@ -38,7 +41,7 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
 
     @Override
     public String serverNameSpace() {
-        return "mwm";
+        return "ydjw";
     }
 
     @Override
@@ -60,5 +63,10 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
     public Observable<String> getTransDataInfo(String sblx) {
         //serverNameSpace()="ydjw";
         return server.getTransDataInfo(sblx);
+    }
+
+    @Override
+    public Observable<String> httpsTest(String yhdh, String yhmm, String sbmac, String sbip, String appver, String sblx) {
+        return server.httpsTest("test", "111111", "FJH7N18703010820", "192.168.0.2", "0.0.1", "1");
     }
 }

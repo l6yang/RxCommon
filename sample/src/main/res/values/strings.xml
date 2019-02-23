@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">RxJava</string>
+    <string name="server_type">网络类型</string>
+    <string name="http">HTTP</string>
+    <string name="https">HTTPS</string>
+    <string name="server_ip">服务器地址</string>
+    <string name="server_port">服务器端口</string>
+    <string name="test">测试</string>
+    <string name="switchOff">否</string>
+    <string name="switchOn">是</string>
+    <string name="trustedCert">证书是否受信任</string>
+    <string name="save">保 存</string>
 </resources>

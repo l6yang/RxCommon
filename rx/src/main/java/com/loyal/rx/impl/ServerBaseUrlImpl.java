@@ -29,7 +29,11 @@ public interface ServerBaseUrlImpl<T> {
     void setUrl(String url, boolean unTrustedCert);
 
     /**
-     * 使用https访问,且证书不受信任
+     * 使用https访问,证书是否受信任
+     *
+     * @return true:证书受信任，流程和http访问方式一样
+     * false:不受信任，需要
+     * {@link com.loyal.rx.RetrofitManage#getInstance(String, boolean)}
      */
-    boolean unTrustedCert();
+    boolean trustedCert();
 }

@@ -30,4 +30,12 @@ public interface ObservableServer {
     @POST("pda.do?method=" + "getTransDataInfo")
     Observable<String> getTransDataInfo(@Field("sblx") String sblx);
 
+    /**
+     * https接口测试
+     */
+    @FormUrlEncoded
+    @POST("pda.do?method=login")
+    Observable<String> httpsTest(@Field("yhdh") String yhdh, @Field("yhmm") String yhmm,
+                                 @Field("sbmac") String sbmac, @Field("sbip") String sbip,
+                                 @Field("appver") String appver, @Field("sblx") String sblx);
 }

@@ -1,5 +1,6 @@
 package com.sample.rx;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements RxSubscriberListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.login).setOnClickListener(this);
+        startActivity(new Intent(this,ServerActivity.class));
+        finish();
     }
 
     @Override
@@ -35,11 +38,11 @@ public class MainActivity extends AppCompatActivity implements RxSubscriberListe
 
     @Override
     public void onResult(int what, Object tag, String result) {
-        System.out.println("onResult:"+result);
+        System.out.println("onResult:" + result);
     }
 
     @Override
     public void onError(int what, Object tag, Throwable e) {
-        System.out.println("onError:"+e.getMessage());
+        System.out.println("onError:" + e.getMessage());
     }
 }

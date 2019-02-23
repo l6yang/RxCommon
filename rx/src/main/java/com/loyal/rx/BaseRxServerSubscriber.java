@@ -24,9 +24,12 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
         return 9080;
     }
 
+    /**
+     * https方式访问证书是否受信任
+     */
     @Override
-    public boolean unTrustedCert() {
-        return false;
+    public boolean trustedCert() {
+        return true;
     }
 
     @Override
@@ -52,15 +55,15 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
 
     public BaseRxServerSubscriber(Context context, String ipAdd, int what, boolean showProgressDialog, RxSubscriberListener<T> listener) {
         super(context, what, showProgressDialog, listener);
-        setUrl(ipAdd, TextUtils.equals("https", httpOrHttps()) && unTrustedCert());
+        setUrl(ipAdd, TextUtils.equals("https", httpOrHttps()) && trustedCert());
     }
 
     @Override
-    public void setUrl(String ipAdd, boolean unTrustedCert) {
+    public void setUrl(String ipAdd, boolean trustedCert) {
         if (TextUtils.isEmpty(ipAdd))
             createServer(RetrofitManage.getInstance(null));
         else {
-            createServer(RetrofitManage.getInstance(baseUrl(ipAdd), unTrustedCert));
+            createServer(RetrofitManage.getInstance(baseUrl(ipAdd), trustedCert));
         }
     }
 }

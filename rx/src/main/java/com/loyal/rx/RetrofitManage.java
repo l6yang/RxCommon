@@ -22,14 +22,19 @@ public class RetrofitManage {
     private static RetrofitManage mInstance;
     private Retrofit retrofit;
 
-    private RetrofitManage(String baseUrl, boolean unTrustedCert, String protocol) {
-        reSetIpAdd(baseUrl, unTrustedCert, protocol);
+    /**
+     * @param trustedCert https方式访问证书是否受信任
+     * @param protocol    哪种协议，如SSL协议或者TLS协议
+     */
+    private RetrofitManage(String baseUrl, boolean trustedCert, String protocol) {
+        reSetIpAdd(baseUrl, trustedCert, protocol);
     }
 
     /**
-     * @param unTrustedCert 是否不受信任的证书
+     * @param trustedCert https方式访问证书是否受信任
+     * @param protocol    哪种协议，如SSL协议或者TLS协议
      */
-    private void reSetIpAdd(String baseUrl, boolean unTrustedCert, String protocol) {
+    private void reSetIpAdd(String baseUrl, boolean trustedCert, String protocol) {
         if (TextUtils.isEmpty(baseUrl))
             baseUrl = "http://192.168.0.1/";
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -39,7 +44,8 @@ public class RetrofitManage {
                 .readTimeout(25, TimeUnit.SECONDS)          //设置读取超时
                 .writeTimeout(60, TimeUnit.SECONDS)//设置写入超时
                 ;
-        if (unTrustedCert) {
+        System.out.println("reSetIpAdd--"+trustedCert);
+        if (!trustedCert) {//若证书不信任执行这里，信任的话流程就和http访问方式一样
             try {
                 SSLContext sc = SSLContext.getInstance(protocol);
                 X509TrustManager[] trustManager = new X509TrustManager[]{new X509TrustManager() {
@@ -82,21 +88,28 @@ public class RetrofitManage {
     }
 
     public static RetrofitManage getInstance(String baseUrl) {
-        return getInstance(baseUrl, false);
+        return getInstance(baseUrl, true);
     }
 
-    public static RetrofitManage getInstance(String baseUrl, boolean unTrustedCert) {
-        return getInstance(baseUrl, unTrustedCert, "SSL");
+    /**
+     * @param trustedCert https方式访问证书是否受信任
+     */
+    public static RetrofitManage getInstance(String baseUrl, boolean trustedCert) {
+        return getInstance(baseUrl, trustedCert, "SSL");
     }
 
-    public static RetrofitManage getInstance(String baseUrl, boolean unTrustedCert, String protocol) {
+    /**
+     * @param trustedCert https方式访问证书是否受信任
+     * @param protocol    哪种协议，如SSL协议或者TLS协议
+     */
+    public static RetrofitManage getInstance(String baseUrl, boolean trustedCert, String protocol) {
         if (mInstance == null) {
             synchronized (RetrofitManage.class) {
                 if (mInstance == null)
-                    mInstance = new RetrofitManage(baseUrl, unTrustedCert, protocol);
-                else mInstance.reSetIpAdd(baseUrl, unTrustedCert, protocol);
+                    mInstance = new RetrofitManage(baseUrl, trustedCert, protocol);
+                else mInstance.reSetIpAdd(baseUrl, trustedCert, protocol);
             }
-        } else mInstance.reSetIpAdd(baseUrl, unTrustedCert, protocol);
+        } else mInstance.reSetIpAdd(baseUrl, trustedCert, protocol);
         return mInstance;
     }
 
