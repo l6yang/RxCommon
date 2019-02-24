@@ -1,6 +1,7 @@
 package com.loyal.rx;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -19,6 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitManage {
+    public static boolean logOut = false;
     private static RetrofitManage mInstance;
     private Retrofit retrofit;
 
@@ -39,12 +41,23 @@ public class RetrofitManage {
             baseUrl = "http://192.168.0.1/";
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        //新建log拦截器
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                if (logOut)
+                    Log.d("RetrofitManage", message);
+            }
+        });
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         OkHttpClient.Builder clientBuild = new OkHttpClient.Builder()
                 .connectTimeout(15, TimeUnit.SECONDS)       //设置连接超时
                 .readTimeout(25, TimeUnit.SECONDS)          //设置读取超时
                 .writeTimeout(60, TimeUnit.SECONDS)//设置写入超时
+                .addInterceptor(loggingInterceptor)//日志拦截
                 ;
-        System.out.println("reSetIpAdd--"+trustedCert);
+        System.out.println("reSetIpAdd--" + trustedCert);
         if (!trustedCert) {//若证书不信任执行这里，信任的话流程就和http访问方式一样
             try {
                 SSLContext sc = SSLContext.getInstance(protocol);

@@ -31,7 +31,6 @@ package com.loyal.rx;
  而Schedulers.trampoline( )在RxJava1中的作用是当其它排队的任务完成后，在当前线程排队开始执行接到的任务，有点像RxJava2中的Schedulers.single()，但也不完全相同，因为Schedulers.single()不是在当前线程而是在一个线程单例中排队执行任务。
  */
 
-import android.support.annotation.IntRange;
 import android.text.TextUtils;
 
 import io.reactivex.Observable;
@@ -40,43 +39,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class RxUtil {
-    /**
-     * @param ipAdd 默认端口9080
-     *              1、（ip地址中包含端口号）192.168.1.15:9081
-     *              2、（ip地址中不含端口号，需要加上默认端口9080）192.168.1.15
-     * @return 1、192.168.1.15:9081
-     * 2、192.168.1.15:9080
-     */
-    public static String getIpAddressByDefaultIp(String ipAdd) {
-        return getIpAddressByDefaultIp(ipAdd, 9080);
-    }
-
-    /**
-     * 默认端口192.168.0.1
-     */
-    public static String getIpAddressByDefaultIp(String ipAdd, @IntRange(from = 0, to = 65535) int port) {
-        if (port < 0 || port > 65535) {
-            throw new IllegalArgumentException("端口号范围0～65535，当前端口号：" + port);
-        } else
-            return getIpAddress(ipAdd, "192.168.0.1", port);
-    }
-
-    /**
-     * @param ipAdd 默认端口9080
-     *              1、（ip地址中包含端口号）192.168.1.15:9081
-     *              2、（ip地址中不含端口号，需要加上默认端口9080）192.168.1.15
-     * @return 1、192.168.1.15:9081
-     * 2、192.168.1.15:9080
-     */
-    public static String getIpAddressByDefaultPort(String ipAdd) {
-        return getIpAddressByDefaultPort(ipAdd, 9080);
-    }
 
     /**
      * 默认端口9080
      */
-    public static String getIpAddressByDefaultPort(String ipAdd, @IntRange(from = 0, to = 65535) int defaultPort) {
-        if (defaultPort < 0 || defaultPort > 65535) {
+    public static String getIpAddressByDefaultPort(String ipAdd, String defaultPort) {
+        if (!portValid(defaultPort)) {
             throw new IllegalArgumentException("端口号范围0～65535，当前端口号：" + defaultPort);
         } else
             return getIpAddress(ipAdd, "192.168.0.1", defaultPort);
@@ -89,55 +57,46 @@ public class RxUtil {
      * @return 1、192.168.0.1:9081
      * 2、192.168.0.1:9080
      */
-    public static String getIpAddress(String ipAdd, String defaultIp, @IntRange(from = 0, to = 65535) int defaultPort) {
-        String address;
-        if (TextUtils.isEmpty(ipAdd)) {
-            address = defaultIp + ":" + defaultPort;
-            return address;
-        }
+    public static String getIpAddress(String ipAdd, String defaultIp, String defaultPort) {
         try {
-            if (ipAdd.contains(":")) {
-                address = ipAdd;
-            } else {
-                address = String.format("%s:%s", ipAdd, defaultPort);
+            if (!portValid(defaultPort)) {
+                throw new IllegalArgumentException("端口号范围0～65535，当前端口号：" + defaultPort);
             }
+            String address;
+            if (TextUtils.isEmpty(ipAdd)) {
+                address = TextUtils.isEmpty(defaultPort) ? defaultIp : String.format("%s:%s", defaultIp, defaultPort);
+                return address;
+            }
+            if (ipAdd.contains(":")) {//包含端口
+                address = ipAdd;
+            } else {//不包含端口
+                address = TextUtils.isEmpty(defaultPort) ? ipAdd : String.format("%s:%s", ipAdd, defaultPort);
+            }
+            return address;
         } catch (Exception e) {
             e.printStackTrace();
-            address = ipAdd;
+            return ipAdd;
         }
-        return address;
-    }
-
-    /**
-     * @see #getBaseUrl(String, String, int, String)
-     */
-    public static String getBaseUrl(String ipAdd, String nameSpace) {
-        return getBaseUrl("http", ipAdd, nameSpace);
-    }
-
-    /**
-     * @see #getBaseUrl(String, String, int, String)
-     */
-    public static String getBaseUrl(String http, String ipAdd, String nameSpace) {
-        return getBaseUrl(http, ipAdd, 9080, nameSpace);
     }
 
     /**
      * @param http      http或者https
-     * @param ipAdd     不一定非要是IP地址，baidu.com 也可以
+     * @param ipAdd     IP地址
      * @param port      端口号
      * @param nameSpace test
      * @return http://192.168.0.155:9080/test/ 必须以"/"结尾
      */
-    public static String getBaseUrl(String http, String ipAdd, @IntRange(from = 0, to = 65535) int port, String nameSpace) {
-        if (port < 0 || port > 65535) {
+    public static String getBaseUrl(String http, String ipAdd, String port, String nameSpace) {
+        if (!portValid(port)) {
             throw new IllegalArgumentException("端口号范围0～65535，当前端口号：" + port);
         } else {
             String url = getIpAddressByDefaultPort(ipAdd, port);
-            return String.format("%s://%s/%s/", http, url, nameSpace);
+            if (TextUtils.isEmpty(nameSpace)) {
+                return String.format("%s://%s/%s", http, url, nameSpace);
+            } else
+                return String.format("%s://%s/%s/", http, url, nameSpace);
         }
     }
-
 
     /**
      * 普通的执行方法
@@ -172,5 +131,16 @@ public class RxUtil {
                 .observeOn(Schedulers.computation())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(observer);
+    }
+
+    public static boolean portValid(String port) {
+        try {
+            if (TextUtils.isEmpty(port))
+                return true;
+            int portInt = Integer.valueOf(port);
+            return (portInt >= 0 && portInt <= 65535);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

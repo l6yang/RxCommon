@@ -27,7 +27,7 @@ public interface ObservableServer {
 
     //根据获取到的代码名称获取数据
     @FormUrlEncoded
-    @POST("pda.do?method=" + "getTransDataInfo")
+    @POST("pda.do?method=getTransDataInfo")
     Observable<String> getTransDataInfo(@Field("sblx") String sblx);
 
     /**
@@ -38,4 +38,14 @@ public interface ObservableServer {
     Observable<String> httpsTest(@Field("yhdh") String yhdh, @Field("yhmm") String yhmm,
                                  @Field("sbmac") String sbmac, @Field("sbip") String sbip,
                                  @Field("appver") String appver, @Field("sblx") String sblx);
+
+    /**
+     * https接口测试
+     */
+    @FormUrlEncoded
+    @POST("getImages?")
+    Observable<String> httpsApi(@Field("page") String page, @Field("count") String count);
+
+    @GET
+    Observable<String> httpsGetApi(@Url String url);
 }

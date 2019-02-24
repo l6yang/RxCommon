@@ -1,8 +1,6 @@
 package com.loyal.rx.impl;
 
-import android.support.annotation.IntRange;
-
-public interface ServerBaseUrlImpl<T> {
+public interface ServerBaseUrlImpl {
     String httpOrHttps();//http 或者https
 
     String serverNameSpace();//访问路径
@@ -18,15 +16,14 @@ public interface ServerBaseUrlImpl<T> {
      *
      * @return 默认端口是9080，具体端口需要自行修改
      */
-    @IntRange(from = 0, to = 65535)
-    int defaultPort();//端口配置
+    String defaultPort();//端口配置
 
     /**
-     * @param url           IP地址或者访问地址
-     * @param unTrustedCert 使用https访问，且证书不受信任
-     *                      {@link #httpOrHttps()}
+     * @param url         IP地址或者访问地址
+     * @param trustedCert 使用https访问，证书是否受信任
+     *                    {@link #httpOrHttps()}
      */
-    void setUrl(String url, boolean unTrustedCert);
+    void setUrl(String url, boolean trustedCert);
 
     /**
      * 使用https访问,证书是否受信任

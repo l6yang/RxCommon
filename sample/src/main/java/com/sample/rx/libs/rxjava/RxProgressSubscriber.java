@@ -29,9 +29,12 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
 
     @Override
     public boolean trustedCert() {
-        boolean t = State.trustedCert;
-        System.out.println("trustedCert()--" + t);
-        return t;
+        return State.trustedCert;
+    }
+
+    @Override
+    public String defaultPort() {
+        return State.defaultPort;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
 
     @Override
     public String serverNameSpace() {
-        return "ydjw";
+        return State.serverNameSpace;
     }
 
     @Override
@@ -68,5 +71,15 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
     @Override
     public Observable<String> httpsTest(String yhdh, String yhmm, String sbmac, String sbip, String appver, String sblx) {
         return server.httpsTest("test", "111111", "FJH7N18703010820", "192.168.0.2", "0.0.1", "1");
+    }
+
+    @Override
+    public Observable<String> httpsApi(String page, String count) {
+        return server.httpsApi("1", "5");
+    }
+
+    @Override
+    public Observable<String> httpsGetApi(String url) {
+        return server.httpsGetApi("https://api.apiopen.top/getImages?page=1&count=5");
     }
 }

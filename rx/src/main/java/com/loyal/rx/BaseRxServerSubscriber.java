@@ -9,7 +9,7 @@ import com.loyal.rx.impl.ServerBaseUrlImpl;
 /**
  * 适用于执行Retrofit+RxJava与服务器交互
  */
-public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> implements ServerBaseUrlImpl<T> {
+public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> implements ServerBaseUrlImpl {
 
     public abstract void createServer(RetrofitManage retrofitManage);
 
@@ -20,8 +20,8 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
 
     /*端口号范围：0～65535*/
     @Override
-    public int defaultPort() {
-        return 9080;
+    public String defaultPort() {
+        return "9080";
     }
 
     /**

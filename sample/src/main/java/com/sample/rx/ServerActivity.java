@@ -50,13 +50,14 @@ public class ServerActivity extends AppCompatActivity implements View.OnClickLis
                 httpsApiTest();
                 break;
             case R.id.saveView:
-                //saveConfig();
+                httpsApi();
                 break;
         }
     }
 
     private void httpsApiTest() {
         int checkId = radioGroup.getCheckedRadioButtonId();
+        State.serverNameSpace = "ydjw";
         String port;
         if (checkId == R.id.tbtn_https) {
             port = "9444";
@@ -73,6 +74,26 @@ public class ServerActivity extends AppCompatActivity implements View.OnClickLis
         subscriber.setSubscribeListener(this);
         System.out.println("-----\"" + subscriber.baseUrl(ipAdd) + "\"");
         RxUtil.rxExecute(subscriber.httpsTest("", "", "", "", "", ""), subscriber);
+    }
+
+    private void httpsApi() {
+        int checkId = radioGroup.getCheckedRadioButtonId();
+        if (checkId == R.id.tbtn_https) {
+            State.httpOrHttps = "https";
+            State.trustedCert = switchTrustedCert.isChecked();
+        } else {
+            State.httpOrHttps = "http";
+            State.trustedCert = true;
+        }
+        State.serverNameSpace = "";
+        State.defaultPort="";
+        String ipAdd = "api.apiopen.top";
+        RxProgressSubscriber<String> subscriber = new RxProgressSubscriber<>(this, ipAdd);
+        subscriber.setDialogMessage("测试中...").showProgressDialog(true);
+        subscriber.setSubscribeListener(this);
+        System.out.println("-----\"" + subscriber.baseUrl(ipAdd) + "\"");
+        RxUtil.rxExecute(subscriber.httpsApi("", ""), subscriber);
+        //RxUtil.rxExecute(subscriber.httpsGetApi(""), subscriber);
     }
 
     @Override
