@@ -57,7 +57,6 @@ public class RetrofitManage {
                 .writeTimeout(60, TimeUnit.SECONDS)//设置写入超时
                 .addInterceptor(loggingInterceptor)//日志拦截
                 ;
-        System.out.println("reSetIpAdd--" + trustedCert);
         if (!trustedCert) {//若证书不信任执行这里，信任的话流程就和http访问方式一样
             try {
                 SSLContext sc = SSLContext.getInstance(protocol);
