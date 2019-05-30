@@ -99,6 +99,16 @@ public class RxUtil {
     }
 
     /**
+     * @param http      http或者https
+     * @param ipAdd     IP地址
+     * @param nameSpace test
+     * @return http://192.168.0.155:9080/test/ 必须以"/"结尾
+     */
+    public static String getBaseUrl(String http, String ipAdd, String nameSpace) {
+        return getBaseUrl(http, ipAdd, "9080", nameSpace);
+    }
+
+    /**
      * 普通的执行方法
      *
      * @see #rxExecuteAndCompute(Observable, Observer)

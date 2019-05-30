@@ -14,7 +14,7 @@
         style="@style/layout_white"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:divider="@drawable/divider_vertical"
+        app:divider="@drawable/divider_horizontal"
         app:showDividers="middle">
 
         <TextView

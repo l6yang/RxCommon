@@ -100,6 +100,7 @@ public class ServerActivity extends AppCompatActivity implements View.OnClickLis
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.tbtn_http:
+                switchTrustedCert.setChecked(false);
                 trustedCertLayout.setVisibility(View.GONE);
                 break;
             case R.id.tbtn_https:
