@@ -1,6 +1,6 @@
 package com.loyal.rx.impl;
 
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
 
 import com.loyal.rx.BaseRxSubscriber;
 

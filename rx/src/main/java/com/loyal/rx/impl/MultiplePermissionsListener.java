@@ -1,6 +1,6 @@
 package com.loyal.rx.impl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.tbruyelle.rxpermissions2.Permission;
 
