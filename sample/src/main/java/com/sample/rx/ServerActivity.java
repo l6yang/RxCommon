@@ -94,7 +94,7 @@ public class ServerActivity extends AppCompatActivity implements View.OnClickLis
         }
         State.serverNameSpace = "";
         State.defaultPort = "";
-        String ipAdd = "192.168..120";
+        String ipAdd = "192.168.0.120";
         RxProgressSubscriber<String> subscriber = new RxProgressSubscriber<>(this, ipAdd);
         subscriber.setDialogMessage("测试中...").showProgressDialog(true);
         subscriber.setSubscribeListener(this);
@@ -131,6 +131,6 @@ public class ServerActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onError(int what, Object tag, Throwable e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
     }
 }
