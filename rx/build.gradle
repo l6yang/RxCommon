@@ -37,7 +37,7 @@ dependencies {
 }
 
 ext {
-    library = [version: '0.0.1']
+    library = [version: '0.0.2']
 }
 //aar打包
 //以下方法为生成jar包文件命令
