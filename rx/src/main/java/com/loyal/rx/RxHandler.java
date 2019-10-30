@@ -60,14 +60,10 @@ public class RxHandler extends Handler implements DialogInterface.OnCancelListen
     }
 
     public static final class Builder {
-        private Context mContext;
-        private ProgressCancelListener listener;
         private RxHandler handler;
 
         public Builder(Context context, ProgressCancelListener cancelListener) {
-            this.mContext = context;
-            this.listener = cancelListener;
-            handler = new RxHandler(mContext, listener);
+            handler = new RxHandler(context, cancelListener);
         }
 
         public Builder setMessage(CharSequence sequence) {

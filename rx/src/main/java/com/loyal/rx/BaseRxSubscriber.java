@@ -1,8 +1,10 @@
 package com.loyal.rx;
 
 import android.content.Context;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
 
 import com.loyal.rx.impl.ProgressCancelListener;
@@ -47,7 +49,7 @@ public abstract class BaseRxSubscriber<T> implements RxImpl<T>, Observer<T>, Pro
     }
 
     @Override
-    public BaseRxSubscriber<T> setWhat(int what) {
+    public BaseRxSubscriber<T> setWhat(@IntRange(from = 2, to = 1000) int what) {
         this.mWhat = what;
         return this;
     }
