@@ -25,19 +25,19 @@ android {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    api 'io.reactivex.rxjava2:rxjava:2.2.4'
-    api 'com.squareup.retrofit2:converter-gson:2.6.2'
-    api 'com.squareup.retrofit2:retrofit:2.6.2'
-    api 'com.squareup.retrofit2:converter-scalars:2.6.2'
-    api 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
-    api 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    api 'androidx.appcompat:appcompat:1.1.0'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    api 'io.reactivex.rxjava2:rxjava:2.2.19'
+    api 'com.squareup.retrofit2:converter-gson:2.8.1'
+    api 'com.squareup.retrofit2:retrofit:2.8.1'
+    api 'com.squareup.retrofit2:converter-scalars:2.8.1'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.8.1'
+    api 'com.squareup.okhttp3:logging-interceptor:4.5.0'
     api 'com.github.tbruyelle:rxpermissions:0.10.2'
 }
 
 ext {
-    library = [version: '0.0.2']
+    library = [version: '0.0.3']
 }
 //aar打包
 //以下方法为生成jar包文件命令

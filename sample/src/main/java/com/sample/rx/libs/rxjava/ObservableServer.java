@@ -11,7 +11,7 @@ import retrofit2.http.Url;
 
 public interface ObservableServer {
     String action = "action.do?method=";
-    public static final String method_login = "mwmLogin";
+    String method_login = "mwmLogin";
 
     @FormUrlEncoded
     @POST(action + "doLoginTest")

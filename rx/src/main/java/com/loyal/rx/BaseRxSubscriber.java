@@ -1,11 +1,10 @@
 package com.loyal.rx;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-
-import android.text.TextUtils;
 
 import com.loyal.rx.impl.ProgressCancelListener;
 import com.loyal.rx.impl.RxImpl;
@@ -18,27 +17,13 @@ import io.reactivex.disposables.Disposable;
 public abstract class BaseRxSubscriber<T> implements RxImpl<T>, Observer<T>, ProgressCancelListener, UnSubscriberListener {
     private Disposable disposable;
     private RxSubscriberListener<T> subscribeListener;
-    private int mWhat;
+    private int mWhat = 2;
     private Object object;
-    private boolean showProgressDialog;//default=false
+    private boolean showProgressDialog = false;//default=false
     private RxHandler.Builder builder;
 
     public BaseRxSubscriber(Context context) {
-        this(context, 2);
-    }
-
-    public BaseRxSubscriber(Context context, @IntRange(from = 2, to = 1000) int what) {
-        this(context, what, false);
-    }
-
-    public BaseRxSubscriber(Context context, @IntRange(from = 2, to = 1000) int what, boolean showProgressDialog) {
-        this(context, what, showProgressDialog, null);
-    }
-
-    public BaseRxSubscriber(Context context, @IntRange(from = 2, to = 1000) int what, boolean showProgressDialog, RxSubscriberListener<T> listener) {
         initDialog(context);
-        setWhat(what).showProgressDialog(showProgressDialog);
-        setSubscribeListener(listener);
     }
 
     private void initDialog(Context context) {

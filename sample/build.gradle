@@ -24,9 +24,13 @@ android{
             signingConfig signingConfigs.release
         }
     }
+    //retrofit2 2.8.1版本之后必须加这个
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation project(':rx')
 }

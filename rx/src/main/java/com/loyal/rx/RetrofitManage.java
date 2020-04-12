@@ -3,6 +3,8 @@ package com.loyal.rx;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
@@ -39,12 +41,10 @@ public class RetrofitManage {
     private void reSetIpAdd(String baseUrl, boolean trustedCert, String protocol) {
         if (TextUtils.isEmpty(baseUrl))
             baseUrl = "http://192.168.0.1/";
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         //新建log拦截器
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
-            public void log(String message) {
+            public void log(@NonNull String message) {
                 if (logOut)
                     Log.d("RetrofitManage", message);
             }
@@ -94,7 +94,7 @@ public class RetrofitManage {
                 .addConverterFactory(ScalarsConverterFactory.create())
                 //增加返回值为Gson的支持(以实体类返回)
                 .addConverterFactory(GsonConverterFactory.create())
-                //增加返回值为Oservable<T>的支持
+                //增加返回值为Observable<T>的支持
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
