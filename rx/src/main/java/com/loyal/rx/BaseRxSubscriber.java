@@ -106,7 +106,8 @@ public abstract class BaseRxSubscriber<T> implements RxImpl<T>, Observer<T>, Pro
     @Override
     public void onError(Throwable e) {
         dismissDialog();
-        if (TextUtils.equals("已取消操作", null == e ? "" : e.getMessage())) {
+        boolean cancelError = TextUtils.equals("已取消操作", null == e ? "" : e.getMessage());
+        if (cancelError) {
             if (null != subscribeListener)
                 subscribeListener.onError(mWhat, object, e);
             subscribeListener = null;
@@ -131,7 +132,7 @@ public abstract class BaseRxSubscriber<T> implements RxImpl<T>, Observer<T>, Pro
 
     /*不显示dialog，取消执行*/
     @Override
-    public void onUnsubscribe() {
+    public void unsubscribe() {
         onComplete();
     }
 

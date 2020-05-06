@@ -33,6 +33,8 @@ package com.loyal.rx;
 
 import android.text.TextUtils;
 
+import com.loyal.rx.error.FlatMapException;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,7 +44,7 @@ public class RxUtil {
 
     /**
      * @param http      http或者https
-     * @param ipAdd     IP地址
+     * @param ipAdd     IP-访问地址
      * @param port      端口号
      * @param nameSpace test
      * @return http://192.168.0.155:9080/test/ 必须以"/"结尾
@@ -51,7 +53,10 @@ public class RxUtil {
         if (!portValid(port)) {
             throw new IllegalArgumentException("端口号范围0～65535，当前端口号：" + port);
         } else {
-            String url = TextUtils.isEmpty(port) ? ipAdd : String.format("%s:%s", ipAdd, port);
+            String url =
+                    //端口号是否为空 或 地址中已经含有端口号
+                    TextUtils.isEmpty(port) || ipAdd.contains(String.format(":%s", port)) ?
+                            ipAdd : String.format("%s:%s", ipAdd, port);
             if (TextUtils.isEmpty(nameSpace)) {
                 return String.format("%s://%s/%s", http, url, nameSpace);
             } else
@@ -103,5 +108,9 @@ public class RxUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static <T> Observable<T> flatMapError(String message) {
+        return Observable.error(new FlatMapException(message));
     }
 }
