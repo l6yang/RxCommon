@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -10,6 +11,16 @@
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-       />
-</LinearLayout>
+        android:text="Login" />
+
+    <Button
+        android:id="@+id/rx_timeout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RX超时测试1" />
+    <Button
+        android:id="@+id/rx_timeout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RX超时测试2" />
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -22,9 +22,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitManage {
+    private static final String TAG = "RetrofitManage";
     public static boolean logOut = false;
     private static RetrofitManage mInstance;
     private Retrofit retrofit;
+    private static OkHttpClient.Builder clientBuild = new OkHttpClient.Builder();
+    public static long CONNECT_TIMEOUT = 15;
+    public static long READ_TIMEOUT = 25;
+    public static long WRITE_TIMEOUT = 60;
 
     /**
      * @param trustedCert https方式访问证书是否受信任
@@ -42,21 +47,8 @@ public class RetrofitManage {
         if (TextUtils.isEmpty(baseUrl))
             baseUrl = "http://192.168.0.1/";
         //新建log拦截器
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(@NonNull String message) {
-                if (logOut)
-                    Log.d("RetrofitManage", message);
-            }
-        });
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        addLogging(logOut);
 
-        OkHttpClient.Builder clientBuild = new OkHttpClient.Builder()
-                .connectTimeout(15, TimeUnit.SECONDS)       //设置连接超时
-                .readTimeout(25, TimeUnit.SECONDS)          //设置读取超时
-                .writeTimeout(60, TimeUnit.SECONDS)//设置写入超时
-                .addInterceptor(loggingInterceptor)//日志拦截
-                ;
         if (!trustedCert) {//若证书不信任执行这里，信任的话流程就和http访问方式一样
             try {
                 SSLContext sc = SSLContext.getInstance(protocol);
@@ -88,7 +80,8 @@ public class RetrofitManage {
                 e.printStackTrace();
             }
         }
-        retrofit = new Retrofit.Builder().client(clientBuild.build())
+        retrofit = new Retrofit.Builder()
+                .client(clientBuild.build())
                 .baseUrl(baseUrl)
                 //增加返回值为String的支持
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -127,5 +120,41 @@ public class RetrofitManage {
 
     public <T> T createServer(Class<T> tClass) {
         return retrofit.create(tClass);
+    }
+
+    /**
+     * 设置连接超时
+     */
+    public static void connectTimeout(long timeout, TimeUnit timeUnit) {
+        clientBuild.connectTimeout(timeout, timeUnit);
+    }
+
+    /**
+     * 设置读取超时
+     */
+    public static void readTimeout(long timeout, TimeUnit timeUnit) {
+        clientBuild.readTimeout(timeout, timeUnit);
+    }
+
+    /**
+     * 设置写入超时
+     */
+    public static void writeTimeout(long timeout, TimeUnit timeUnit) {
+        clientBuild.writeTimeout(timeout, timeUnit);
+    }
+
+    public static void addLogging(boolean logOut) {
+        if (logOut) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                @Override
+                public void log(@NonNull String message) {
+                    Log.e(TAG, message);
+                }
+            });
+            interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+            clientBuild.addInterceptor(interceptor);//日志拦截
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            clientBuild.addInterceptor(interceptor);//日志拦截
+        }
     }
 }
