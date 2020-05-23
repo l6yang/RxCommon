@@ -3,6 +3,7 @@ package com.sample.rx.libs.rxjava;
 import android.content.Context;
 
 import com.loyal.rx.BaseRxServerSubscriber;
+import com.loyal.rx.Config;
 import com.loyal.rx.RetrofitManage;
 import com.sample.rx.State;
 
@@ -81,5 +82,10 @@ public class RxProgressSubscriber<T> extends BaseRxServerSubscriber<T> implement
     @Override
     public Observable<String> httpsGetApi(String url) {
         return server.httpsGetApi("https://api.apiopen.top/getImages?page=1&count=5");
+    }
+
+    @Override
+    public void setUrl(Config config) {
+        super.setUrl(config);
     }
 }

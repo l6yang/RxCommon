@@ -23,13 +23,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitManage {
     private static final String TAG = "RetrofitManage";
-    public static boolean logOut = false;
+    public static boolean logOut = true;
     private static RetrofitManage mInstance;
     private Retrofit retrofit;
-    private static OkHttpClient.Builder clientBuild = new OkHttpClient.Builder();
-    public static long CONNECT_TIMEOUT = 15;
-    public static long READ_TIMEOUT = 25;
-    public static long WRITE_TIMEOUT = 60;
+    private static Config defaultConfig;
 
     /**
      * @param trustedCert https方式访问证书是否受信任
@@ -46,8 +43,9 @@ public class RetrofitManage {
     private void reSetIpAdd(String baseUrl, boolean trustedCert, String protocol) {
         if (TextUtils.isEmpty(baseUrl))
             baseUrl = "http://192.168.0.1/";
+        OkHttpClient.Builder clientBuilder = useClient(defaultConfig);
         //新建log拦截器
-        addLogging(logOut);
+        addLogging(clientBuilder);
 
         if (!trustedCert) {//若证书不信任执行这里，信任的话流程就和http访问方式一样
             try {
@@ -69,7 +67,7 @@ public class RetrofitManage {
                     }
                 }};
                 sc.init(null, trustManager, /*new SecureRandom()*/null);
-                clientBuild.sslSocketFactory(sc.getSocketFactory(), trustManager[0])
+                clientBuilder.sslSocketFactory(sc.getSocketFactory(), trustManager[0])
                         .hostnameVerifier(new HostnameVerifier() {
                             @Override
                             public boolean verify(String hostname, SSLSession session) {
@@ -81,7 +79,7 @@ public class RetrofitManage {
             }
         }
         retrofit = new Retrofit.Builder()
-                .client(clientBuild.build())
+                .client(clientBuilder.build())
                 .baseUrl(baseUrl)
                 //增加返回值为String的支持
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -94,6 +92,10 @@ public class RetrofitManage {
 
     public static RetrofitManage getInstance(String baseUrl) {
         return getInstance(baseUrl, true);
+    }
+
+    public static RetrofitManage getInstance(Config config) {
+        return getInstance("", true);
     }
 
     /**
@@ -122,39 +124,37 @@ public class RetrofitManage {
         return retrofit.create(tClass);
     }
 
-    /**
-     * 设置连接超时
-     */
-    public static void connectTimeout(long timeout, TimeUnit timeUnit) {
-        clientBuild.connectTimeout(timeout, timeUnit);
-    }
-
-    /**
-     * 设置读取超时
-     */
-    public static void readTimeout(long timeout, TimeUnit timeUnit) {
-        clientBuild.readTimeout(timeout, timeUnit);
-    }
-
-    /**
-     * 设置写入超时
-     */
-    public static void writeTimeout(long timeout, TimeUnit timeUnit) {
-        clientBuild.writeTimeout(timeout, timeUnit);
-    }
-
-    public static void addLogging(boolean logOut) {
+    private void addLogging(OkHttpClient.Builder httpClient) {
         if (logOut) {
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            HttpLoggingInterceptor interceptorBody = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                 @Override
                 public void log(@NonNull String message) {
                     Log.e(TAG, message);
                 }
             });
-            interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
-            clientBuild.addInterceptor(interceptor);//日志拦截
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            clientBuild.addInterceptor(interceptor);//日志拦截
+            interceptorBody.setLevel(HttpLoggingInterceptor.Level.BODY);
+            httpClient.addInterceptor(interceptorBody);//日志拦截
         }
+    }
+
+    private OkHttpClient.Builder useClient(Config config) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (null == config) {
+            builder.connectTimeout(15, TimeUnit.SECONDS)
+                    .readTimeout(25, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS);
+            return builder;
+        }
+        long connectTimeout = config.getConnectTimeout();
+        long readTimeout = config.getReadTimeout();
+        long writeTimeout = config.getWriteTimeout();
+        builder.connectTimeout(connectTimeout, TimeUnit.SECONDS);
+        builder.readTimeout(readTimeout, TimeUnit.SECONDS);
+        builder.writeTimeout(writeTimeout, TimeUnit.SECONDS);
+        return builder;
+    }
+
+    public static void setConfig(Config config) {
+        defaultConfig = config;
     }
 }

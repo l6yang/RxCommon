@@ -1,5 +1,6 @@
 package com.loyal.rx;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,15 +13,15 @@ public class RxHandler extends Handler implements DialogInterface.OnCancelListen
     private Context context;
     private ProgressCancelListener listener;
 
-    public RxHandler(Context context, ProgressCancelListener cancelListener) {
+    public RxHandler(Context context, int theme, ProgressCancelListener cancelListener) {
         this.context = context;
-        initDialog();
+        initDialog(theme);
         this.listener = cancelListener;
     }
 
-    private void initDialog() {
+    private void initDialog(int theme) {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(context);
+            progressDialog = new ProgressDialog(context, theme);
             progressDialog.setOnCancelListener(this);
         }
     }
@@ -48,6 +49,8 @@ public class RxHandler extends Handler implements DialogInterface.OnCancelListen
     }
 
     private void showDialog() {
+        if (context instanceof Activity && ((Activity) context).isFinishing())
+            return;
         if (null != progressDialog && !progressDialog.isShowing()) {
             progressDialog.show();
         }
@@ -62,8 +65,8 @@ public class RxHandler extends Handler implements DialogInterface.OnCancelListen
     public static final class Builder {
         private RxHandler handler;
 
-        public Builder(Context context, ProgressCancelListener cancelListener) {
-            handler = new RxHandler(context, cancelListener);
+        public Builder(Context context, int theme, ProgressCancelListener cancelListener) {
+            handler = new RxHandler(context, theme, cancelListener);
         }
 
         public Builder setMessage(CharSequence sequence) {

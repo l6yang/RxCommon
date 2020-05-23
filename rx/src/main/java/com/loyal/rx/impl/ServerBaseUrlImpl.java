@@ -1,5 +1,7 @@
 package com.loyal.rx.impl;
 
+import com.loyal.rx.Config;
+
 public interface ServerBaseUrlImpl {
     String httpOrHttps();//http 或者https
 
@@ -24,6 +26,8 @@ public interface ServerBaseUrlImpl {
      *                    {@link #httpOrHttps()}
      */
     void setUrl(String url, boolean trustedCert);
+
+    void setUrl(Config config);
 
     /**
      * 使用https访问,证书是否受信任

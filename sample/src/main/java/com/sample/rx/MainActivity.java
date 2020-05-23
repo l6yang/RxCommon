@@ -1,15 +1,14 @@
 package com.sample.rx;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
-import android.view.View;
-
 import com.google.gson.Gson;
+import com.loyal.rx.Config;
 import com.loyal.rx.RetrofitManage;
 import com.loyal.rx.RxUtil;
 import com.loyal.rx.impl.RxSubscriberListener;
@@ -19,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements RxSubscriberListener<String>, View.OnClickListener {
 
@@ -33,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements RxSubscriberListe
         findViewById(R.id.login).setOnClickListener(this);
         findViewById(R.id.rx_timeout1).setOnClickListener(this);
         findViewById(R.id.rx_timeout2).setOnClickListener(this);
+        findViewById(R.id.rx_timeout3).setOnClickListener(this);
         //startActivity(new Intent(this, ServerActivity.class));
         //finish();
     }
@@ -52,10 +51,17 @@ public class MainActivity extends AppCompatActivity implements RxSubscriberListe
             case R.id.rx_timeout2:
                 rxTimeOut(5);
                 break;
+            case R.id.rx_timeout3:
+                login();
+                break;
         }
     }
 
     private void login() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = formatter.format(new Date());
+        Log.e("start->", "" + time);
+        RetrofitManage.setConfig(new Config());
         RxProgressSubscriber<String> subscriber = new RxProgressSubscriber<>(this, "192.168.0.110");
         subscriber.setDialogMessage("loading...").showProgressDialog(true);
         subscriber.setWhat(WHAT_LOGIN).setSubscribeListener(this);
@@ -66,10 +72,12 @@ public class MainActivity extends AppCompatActivity implements RxSubscriberListe
     }
 
     private void rxTimeOut(int timeOut) {
+        Config config = new Config();
+        config.setConnectTimeout(timeOut);
+        config.setReadTimeout(timeOut);
+        config.setWriteTimeout(timeOut);
 
-        RetrofitManage.connectTimeout(timeOut, TimeUnit.SECONDS);
-        RetrofitManage.readTimeout(timeOut, TimeUnit.SECONDS);
-        RetrofitManage.writeTimeout(timeOut, TimeUnit.SECONDS);
+        RetrofitManage.setConfig(config);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = formatter.format(new Date());
         Log.e("start->", "" + time);
@@ -87,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements RxSubscriberListe
     public void onResult(int what, Object tag, String result) {
         switch (what) {
             case WHAT_LOGIN:
-                //System.out.println("onResult:" + result);
+                SimpleDateFormat xxx = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String x = xxx.format(new Date());
+                Log.e("onResult->", "" + x);
                 break;
             case WHAT_TIMEOUT:
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -101,7 +111,9 @@ public class MainActivity extends AppCompatActivity implements RxSubscriberListe
     public void onError(int what, Object tag, Throwable e) {
         switch (what) {
             case WHAT_LOGIN:
-                System.out.println("onError:" + e.getMessage());
+                SimpleDateFormat xxx = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String x = xxx.format(new Date());
+                Log.e("onResult->", "" + x);
                 break;
             case WHAT_TIMEOUT:
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

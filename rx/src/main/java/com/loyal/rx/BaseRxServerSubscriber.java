@@ -18,6 +18,11 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
         setUrl(ipAdd, TextUtils.equals("https", httpOrHttps()) && trustedCert());
     }
 
+    public BaseRxServerSubscriber(Context context, int theme, String ipAdd) {
+        super(context, theme);
+        setUrl(ipAdd, TextUtils.equals("https", httpOrHttps()) && trustedCert());
+    }
+
     public abstract void createServer(RetrofitManage retrofitManage);
 
     @Override
@@ -47,9 +52,14 @@ public abstract class BaseRxServerSubscriber<T> extends BaseRxSubscriber<T> impl
     @Override
     public void setUrl(String ipAdd, boolean trustedCert) {
         if (TextUtils.isEmpty(ipAdd))
-            createServer(RetrofitManage.getInstance(null));
+            createServer(RetrofitManage.getInstance((String) null));
         else {
             createServer(RetrofitManage.getInstance(baseUrl(ipAdd), trustedCert));
         }
+    }
+
+    @Override
+    public void setUrl(Config config) {
+        createServer(RetrofitManage.getInstance(config));
     }
 }

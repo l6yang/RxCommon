@@ -23,4 +23,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="RX超时测试2" />
+
+    <Button
+        android:id="@+id/rx_timeout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RX超时测试3" />
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -23,12 +23,16 @@ public abstract class BaseRxSubscriber<T> implements RxImpl<T>, Observer<T>, Pro
     private RxHandler.Builder builder;
 
     public BaseRxSubscriber(Context context) {
-        initDialog(context);
+        this(context, 0);
     }
 
-    private void initDialog(Context context) {
+    public BaseRxSubscriber(Context context, int dialogTheme) {
+        initDialog(context, dialogTheme);
+    }
+
+    private void initDialog(Context context, int theme) {
         if (null != context) {
-            builder = new RxHandler.Builder(context, this);
+            builder = new RxHandler.Builder(context, theme, this);
             setDialogMessage("").setCancelable(true).setCanceledOnTouchOutside(true);
         }
     }
